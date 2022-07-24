@@ -93,7 +93,7 @@ export default function UserManagement() {
                     <td>
                       <button
                         onClick={() => {
-                          dispatch(deleteMemberAction(member.userName));
+                          dispatch(deleteMemberAction(member.id));
                         }}
                         className="btn btn-danger"
                       >

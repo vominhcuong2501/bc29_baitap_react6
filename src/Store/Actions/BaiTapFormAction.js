@@ -8,10 +8,10 @@ const addMemberAction = (values) => {
     }
 }
 
-const deleteMemberAction = (userName) => {
+const deleteMemberAction = (id) => {
     return {
         type: DELETE_MEMBER,
-        payload: userName
+        payload: id
     }
 }
 
