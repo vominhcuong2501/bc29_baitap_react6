@@ -79,12 +79,6 @@ export default function FormRegister() {
     if (!event.target.checkValidity()) {
       return;
     }
-    for (let i = 0; i < mangSinhVien.length; i++) {
-      if (state.values.userName === mangSinhVien[i].userName) {
-        alert("Username already exists!!!");
-        return;
-      }
-    }
 
     if (selected) {
       dispatch(updateMemberAction(state.values));

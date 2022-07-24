@@ -7,7 +7,8 @@ import {
 
 const DEFAULT_STATE = {
   mangSinhVien: [
-    {
+    { 
+      id: 1,
       passWord: 123456,
       userName: "cuongvo",
       fullName: "vominhcuong",
@@ -16,6 +17,7 @@ const DEFAULT_STATE = {
       type: "Admin",
     },
     {
+      id: 2,
       passWord: 123456,
       userName: "tungle",
       fullName: "leminhtung",
@@ -31,15 +33,14 @@ export const BaiTapFormReducer = (state = DEFAULT_STATE, { type, payload }) => {
   switch (type) {
     case ADD_MEMBER: {
       let mangSinhVienNew = [...state.mangSinhVien];
-      mangSinhVienNew.push(payload);
+      mangSinhVienNew.push({...payload, id: Date.now()});
       state.mangSinhVien = mangSinhVienNew;
-      state.selected = null;
       return { ...state };
     }
 
     case DELETE_MEMBER: {
       state.mangSinhVien = state.mangSinhVien.filter(
-        (ele) => ele.userName !== payload
+        (ele) => ele.id !== payload
       );
       return { ...state };
     }
@@ -59,7 +60,7 @@ export const BaiTapFormReducer = (state = DEFAULT_STATE, { type, payload }) => {
       //   }
       //   state.mangSinhVien = data;
       state.mangSinhVien = state.mangSinhVien.map((ele) =>
-        ele.userName === payload.userName ? payload : ele
+        ele.id === payload.id ? payload : ele
       );
       state.selected = null;
       return { ...state };
