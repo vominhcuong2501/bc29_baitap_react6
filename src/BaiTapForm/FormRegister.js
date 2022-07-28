@@ -5,32 +5,35 @@ import {
   updateMemberAction,
 } from "../Store/Actions/BaiTapFormAction";
 
+let VALUES_DEFAULT = {
+  userName: "",
+  fullName: "",
+  passWord: "",
+  email: "",
+  phoneNumber: "",
+  type: "Client",
+};
+let ERRORS_DEFAULT = {
+  userName: "",
+  fullName: "",
+  passWord: "",
+  email: "",
+  phoneNumber: "",
+  type: "",
+};
+
 export default function FormRegister() {
   const [state, setState] = useState({
-    values: {
-      userName: "",
-      fullName: "",
-      passWord: "",
-      email: "",
-      phoneNumber: "",
-      type: "Client",
-    },
-    errors: {
-      userName: "",
-      fullName: "",
-      passWord: "",
-      email: "",
-      phoneNumber: "",
-      type: "",
-    },
+    values: VALUES_DEFAULT,
+    errors: ERRORS_DEFAULT,
   });
 
-  // lấy thông tin từ store reducer
-  const { selected, mangSinhVien } = useSelector(
-    (state) => state.BaiTapFormReducer
-  );
+  const [valid, setValid] = useState({ isValid: true });
 
-  // xét nếu selectd trên reducer tồn tại thì setState nó selectedReducer === valaues
+  // lấy thông tin từ store reducer
+  const { selected } = useSelector((state) => state.BaiTapFormReducer);
+
+  // xét nếu selected trên reducer tồn tại thì sẽ chạy useEffect và mỗi lần setState nó chạy useEffect
   useEffect(() => {
     if (selected)
       setState((preState) => ({
@@ -71,6 +74,10 @@ export default function FormRegister() {
       errors: { ...state.errors, [name]: message },
       values: { ...state.values, [name]: value },
     });
+
+    if (formRef.current?.checkValidity()) {
+      setValid({ isValid: false });
+    }
   };
 
   // thực hiện click add thong tin
@@ -80,29 +87,17 @@ export default function FormRegister() {
       return;
     }
 
-    if (selected) {
-      dispatch(updateMemberAction(state.values));
-    } else {
-      dispatch(addMemberAction(state.values));
-    }
+    selected
+      ? dispatch(updateMemberAction(state.values))
+      : dispatch(addMemberAction(state.values));
 
     setState({
-      values: {
-        userName: "",
-        fullName: "",
-        passWord: "",
-        email: "",
-        phoneNumber: "",
-        type: "Client",
-      },
-      errors: {
-        userName: "",
-        fullName: "",
-        passWord: "",
-        email: "",
-        phoneNumber: "",
-        type: "",
-      },
+      values: VALUES_DEFAULT,
+      errors: ERRORS_DEFAULT,
+    });
+
+    setValid({
+      isValid: true,
     });
   };
 
@@ -128,7 +123,7 @@ export default function FormRegister() {
                     name="userName"
                     type="text"
                     className="form-control"
-                    maxLength={10}
+                    maxLength={20}
                     minLength={5}
                     value={userName}
                     title="Username"
@@ -152,6 +147,8 @@ export default function FormRegister() {
                     "ụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]+$'
                     title="Fullname"
                     value={fullName}
+                    maxLength={30}
+                    minLength={5}
                   />
                   {state.errors.fullName && (
                     <span className="text-danger">{state.errors.fullName}</span>
@@ -169,6 +166,8 @@ export default function FormRegister() {
                     className="form-control"
                     value={passWord}
                     title="Password"
+                    maxLength={8}
+                    minLength={4}
                   />
                   {state.errors.passWord && (
                     <span className="text-danger">{state.errors.passWord}</span>
@@ -229,7 +228,7 @@ export default function FormRegister() {
               </div>
             </div>
             <button
-              disabled={!formRef.current?.checkValidity()}
+              disabled={valid.isValid}
               type="submit"
               className="btn btn-warning mr-2"
             >
@@ -238,22 +237,8 @@ export default function FormRegister() {
             <button
               onClick={(e) => {
                 setState({
-                  values: {
-                    userName: "",
-                    fullName: "",
-                    passWord: "",
-                    email: "",
-                    phoneNumber: "",
-                    type: "Client",
-                  },
-                  errors: {
-                    userName: "",
-                    fullName: "",
-                    passWord: "",
-                    email: "",
-                    phoneNumber: "",
-                    type: "",
-                  },
+                  values: VALUES_DEFAULT,
+                  errors: ERRORS_DEFAULT,
                 });
               }}
               type="reset"
